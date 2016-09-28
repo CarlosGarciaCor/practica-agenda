@@ -19,10 +19,12 @@ import javax.swing.JScrollPane;
 import com.islasfilipinas.cj.agenda.Contacto;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JTable;
 
 public class Mostrar extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
+	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -53,8 +55,10 @@ public class Mostrar extends JDialog {
 		{
 			JScrollPane scrollPane = new JScrollPane();
 			contentPanel.add(scrollPane);
-			JList<Contacto> list = new JList<Contacto>();
-			scrollPane.setViewportView(list);
+			{
+				table = new JTable();
+				scrollPane.add(table, BorderLayout.NORTH);
+			}
 			
 			Contacto c1 = new Contacto("Pedro", "691745679");
 			DefaultListModel<Contacto> listaContactos = new DefaultListModel<Contacto>();
@@ -71,8 +75,6 @@ public class Mostrar extends JDialog {
 			listaContactos.addElement(c1);
 			listaContactos.addElement(c1);
 			listaContactos.addElement(c1);
-			
-			list.setModel(listaContactos);
 
 		}
 					

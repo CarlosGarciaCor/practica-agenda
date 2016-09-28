@@ -1,7 +1,10 @@
 package com.islasfilipinas.cj.agenda;
 
-public class Contacto {
+import java.io.Serializable;
 
+public class Contacto implements Serializable {
+
+	private static final long serialVersionUID = 3575857020519478314L;
 	private String nombre;
 	private String telefono;
 	

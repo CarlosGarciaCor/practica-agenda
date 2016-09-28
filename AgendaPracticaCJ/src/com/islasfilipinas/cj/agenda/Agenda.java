@@ -1,16 +1,25 @@
 package com.islasfilipinas.cj.agenda;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
+
+import com.islasfilipinas.cj.ficheros.Fichero;
 
 public class Agenda {
 	
 	private HashMap<Integer, Contacto> contactos;
 	
-	public Agenda(){
-		this.contactos=this.getContactos();
+	public Agenda(File file) throws IOException{
+		
 	}
 	
-	private HashMap<Integer, Contacto> getContactos(){
+	public void guardar(File file) throws IOException{
+		Fichero.guardar(this, file);
+	}
+	
+	public HashMap<Integer, Contacto> getContactos(){
 		return null;
 	}
 	
@@ -26,8 +35,4 @@ public class Agenda {
 	public void buscar(Contacto contacto){
 		
 	}
-	public void guardar(){
-		
-	}
-	
 }
