@@ -1,38 +1,69 @@
 package com.islasfilipinas.cj.agenda;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.HashMap;
+import java.io.*;
+import java.util.ArrayList;
 
 import com.islasfilipinas.cj.ficheros.Fichero;
 
-public class Agenda {
+//Faltan métodos modificar y buscar, y hacer validaciones de contacto
+public class Agenda implements Serializable{
 	
-	private HashMap<Integer, Contacto> contactos;
+	private static final long serialVersionUID = 6832112334979262272L;
+	private ArrayList<Contacto> contactos;
 	
-	public Agenda(File file) throws IOException{
+	
+	//El constructor de Agenda la carga directamente, nos ahorramos un método
+	//Además siempre que esté instanciado un objeto Agenda estarán cargados los datos,
+	//lo cual es un requisito
+	public Agenda(){
+		this.contactos=new ArrayList<Contacto>();
+	}
+	public Agenda(File file) throws IOException, ClassNotFoundException{
+		contactos=Fichero.leerAgenda(file);
 		
 	}
-	
+
 	public void guardar(File file) throws IOException{
 		Fichero.guardar(this, file);
 	}
 	
-	public HashMap<Integer, Contacto> getContactos(){
-		return null;
+	//Método para comprobar si un contacto existe en la agenda:
+	//Es necesario porque el contains de Object es puta mierda
+	public boolean containsContacto(Contacto contacto){
+		for (Contacto item: this.contactos){
+			if (contacto.getNombre().equals(item.getNombre())
+					&& contacto.getTelefono().equals(item.getNombre()))
+					return true;
+		}
+		return false;
 	}
 	
+	//Si existe el contacto lanza una excepción que hay que programar (no miro a nadie)
 	public void annadir(Contacto contacto){
-		
+		if (!this.containsContacto(contacto)){
+			this.contactos.add(contacto);
+		}
+		//else
+			//throw new ContactoRepetidoException();
 	}
+	
+	//Más de lo mismo
 	public void borrar(Contacto contacto){
-		 
+		if (this.containsContacto(contacto))
+			this.contactos.remove(contacto);
+		//else
+			//throw new ContactoRepetidoException();
 	}
+	
 	public void modificar(Contacto contacto, Contacto contactoMod){
 		
 	}
+	
 	public void buscar(Contacto contacto){
 		
 	}
+	public ArrayList<Contacto> getContactos() {
+		return contactos;
+	}
+
 }
