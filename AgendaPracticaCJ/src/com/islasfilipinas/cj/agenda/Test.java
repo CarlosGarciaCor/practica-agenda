@@ -2,6 +2,9 @@ package com.islasfilipinas.cj.agenda;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+
+import com.islasfilipinas.cj.exceptions.FicheroNoValidoException;
 
 public class Test {
 
@@ -9,12 +12,21 @@ public class Test {
 		// TODO Auto-generated method stub
 		File file=new File("agenda.ag");
 		
-		try {
-			Agenda agenda=new Agenda(file);
+		/*try {
+			Agenda agenda=new Agenda();
+			agenda.cargar(file);
+			for (Contacto item: agenda.getContactos()){
+				System.out.println(item.getNombre()+" - "+item.getTelefono());
+			}
+			System.out.println("----------");
+			Collections.sort(agenda.getContactos());
 			for (Contacto item: agenda.getContactos()){
 				System.out.println(item.getNombre()+" - "+item.getTelefono());
 			}
 		} catch (ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FicheroNoValidoException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
