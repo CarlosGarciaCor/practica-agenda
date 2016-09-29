@@ -36,7 +36,7 @@ public class Agenda implements Serializable{
 	private boolean containsContacto(Contacto contacto){
 		for (Contacto item: this.contactos){
 			if (contacto.getNombre().equals(item.getNombre())
-					&& contacto.getTelefono().equals(item.getNombre()))
+					&& contacto.getTelefono().equals(item.getTelefono()))
 				return true;
 		}
 		return false;

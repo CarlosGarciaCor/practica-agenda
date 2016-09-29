@@ -1,31 +1,33 @@
 package com.islasfilipinas.cj.interfaz;
 
-import java.awt.BorderLayout;
+
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+
+import com.islasfilipinas.cj.agenda.Agenda;
+
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class MenuPrincipal extends JFrame {
-
-	private JPanel contentPane;
-
+	
+	private Agenda agenda;
 	/**
-	 * Launch the application.
+	 * Main de la aplicación. Lanza el menú principal desde el cual se pueden realizar todas las acciones deseadas.
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MenuPrincipal frame = new MenuPrincipal();
-					frame.setVisible(true);
+					// Instancio el menú principal para que aparezca a la ejecución del programa.
+					MenuPrincipal menuPrincipal = new MenuPrincipal();
+					menuPrincipal.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -34,56 +36,159 @@ public class MenuPrincipal extends JFrame {
 	}
 
 	/**
-	 * Create the frame.
+	 * Constructor del menú principal. Contiene todos los métodos para darle forma y estilo. También contiene los listeners y los eventos.
 	 */
 	public MenuPrincipal() {
+		// Estos cinco métodos colocan el título, el icono, la operación de cierre, el tamaño y el layout respectivamente.
 		setTitle("Agenda de contactos");
-		setIconImage(Toolkit.getDefaultToolkit().getImage(MenuPrincipal.class.getResource("/com/islasfilipinas/cj/interfaz/icono_agenda.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(MenuPrincipal.class.getResource("/com/islasfilipinas/cj/interfaz/iconos/icono_agenda.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 300, 250);
+		setBounds(400, 250, 456, 270);
+		setLayout(new FlowLayout());
+		iniciarComponentes();
+		agenda = new Agenda();
 		
+	}
+
+	public Agenda getAgenda() {
+		return agenda;
+	}
+
+	private void iniciarComponentes() {
+		// Constructor de la barra de menú, dentro tendremos todas las acciones que el programa puede llevar a cabo. 
+		// También está el método que coloca la barra dentro del frame.
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
-		JMenu mnAgenda = new JMenu("Agenda");
-		menuBar.add(mnAgenda);
 		
-		JMenuItem mntmCargarAgenda = new JMenuItem("Cargar agenda");
-		mnAgenda.add(mntmCargarAgenda);
 		
-		JMenuItem mntmGuardarAgenda = new JMenuItem("Guardar agenda");
-		mnAgenda.add(mntmGuardarAgenda);
+		// ------------------------------------- AGENDA -------------------------------------------------
 		
-		JMenuItem mntmMostrarAgenda = new JMenuItem("Mostrar agenda");
 		
-		mntmMostrarAgenda.addActionListener(new ActionListener() {
+		
+		// Constructor de una de las opciones del menú, la de la agenda.
+		// También está el método que coloca la opción en la barra de menú.
+		JMenu menuAgenda = new JMenu("Agenda");
+		menuBar.add(menuAgenda);
+		
+		/* 
+		 * Los tres constructores a continuación añaden opciones al menú de agenda, además se programan 
+		 * sus listeners y actionEvents para hacer diferentes acciones al hacer click en las acciones.
+		 */
+		JMenuItem opcionCargarAgenda = new JMenuItem("Cargar agenda");
+		opcionCargarAgenda.addActionListener(new ActionListener() {
 			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+				cargarAgenda();
+				
+			}
+		});
+		menuAgenda.add(opcionCargarAgenda);
+		
+		JMenuItem opcionGuardarAgenda = new JMenuItem("Guardar agenda");
+		opcionGuardarAgenda.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+				guardarAgenda();
+				
+			}
+			
+		});
+		menuAgenda.add(opcionGuardarAgenda);
+		
+		JMenuItem opcionMostrarAgenda = new JMenuItem("Mostrar agenda");
+		opcionMostrarAgenda.addActionListener(new ActionListener() {
+			
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
 				mostrarAgenda();
 			}
 		});
-		mnAgenda.add(mntmMostrarAgenda);
+		menuAgenda.add(opcionMostrarAgenda);
 		
-		JMenu mnContactos = new JMenu("Contactos");
-		menuBar.add(mnContactos);
 		
-		JMenuItem mntmAgregarContacto = new JMenuItem("Agregar contacto");
-		mnContactos.add(mntmAgregarContacto);
+		// ------------------------------- CONTACTOS -----------------------------------
 		
-		JMenuItem mntmModificarContacto = new JMenuItem("Modificar contacto");
-		mnContactos.add(mntmModificarContacto);
 		
-		JMenuItem mntmEliminarContacto = new JMenuItem("Eliminar contacto");
-		mnContactos.add(mntmEliminarContacto);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
-		setContentPane(contentPane);
+		// Constructor de otra opción de la barra de menú, los contactos.
+		// También está el método que coloca la opción en la barra de menú.
+		JMenu menuContactos = new JMenu("Contactos");
+		menuBar.add(menuContactos);
+		
+		// Constructores, listeners y actionEvents para las dos opciones del menú de contactos.
+		JMenuItem opcionAgregarContacto = new JMenuItem("Agregar contacto");
+		opcionAgregarContacto.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				agregarContacto();
+			}
+		});
+		menuContactos.add(opcionAgregarContacto);
+		
+		JMenuItem opcionModificarBorrarContacto = new JMenuItem("Modificar/Eliminar contacto");
+		opcionModificarBorrarContacto.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+				modificarBorrarContacto();
+			}
+		});
+		menuContactos.add(opcionModificarBorrarContacto);
+		
+		
+		// --------------------------------------- AYUDA ----------------------------------------
+		
+		/*
+		 * Constructor de la opción de menú para ver la ayuda referente al programa.
+		 * También está el método para capturar el evento mediante un listener y el
+		 * método para añadir la opción a la barra de menú.
+		 */
+		JMenuItem opcionAyuda = new JMenu("Ayuda");
+		opcionAyuda.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mostrarAyuda();
+				
+			}
+		});
+		menuBar.add(opcionAyuda);
 	}
 	
+	
+	/*
+	 * A partir de aquí están los métodos privados que se utilizan para realizar las diferentes acciones
+	 * de los eventos.
+	 */
 	private void mostrarAgenda(){
-		Mostrar agenda = new Mostrar(this);
+		Mostrar mostrarAgenda = new Mostrar(this);
+	}
+	
+	private void guardarAgenda() {
+		
+	}
+	
+	private void cargarAgenda() {
+		
+	}
+	
+	private void agregarContacto() {
+		AgregarContacto agregar = new AgregarContacto(this);
+	}
+	
+	private void modificarBorrarContacto() {
+	
+	}
+	
+	private void mostrarAyuda(){
+		
 	}
 
 }

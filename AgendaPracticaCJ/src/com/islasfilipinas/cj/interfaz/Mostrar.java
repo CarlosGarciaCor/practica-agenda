@@ -1,102 +1,72 @@
 package com.islasfilipinas.cj.interfaz;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.Frame;
-
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
+import javax.swing.JFrame;
+import javax.swing.table.DefaultTableModel;
 import java.awt.Toolkit;
-
-import javax.swing.JList;
 import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
-
+import com.islasfilipinas.cj.agenda.Agenda;
 import com.islasfilipinas.cj.agenda.Contacto;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 
 public class Mostrar extends JDialog {
-
-	private final JPanel contentPanel = new JPanel();
+	private Agenda agenda;
+	// HASTA QUE PUNTO ES ESTO NECESARIOOO?
+	private JFrame padre;
 	private JTable table;
 
 	/**
-	 * Launch the application.
+	 * Constructor del JDialog encargado de mostrar el contenido de la agenda.
 	 */
-	public static void main(String[] args) {
-		try {
-			Mostrar dialog = new Mostrar(new MenuPrincipal());
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Create the dialog.
-	 */
-	public Mostrar(Frame propietario) {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Mostrar.class.getResource("/com/islasfilipinas/cj/interfaz/icono_agenda.png")));
+	public Mostrar(JFrame padre) {
+		super(padre);
+		this.padre=padre;
+		agenda = ((MenuPrincipal) padre).getAgenda();
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Mostrar.class.getResource("/com/islasfilipinas/cj/interfaz/iconos/icono_agenda.png")));
+		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
-		BorderLayout borderLayout = new BorderLayout();
-		getContentPane().setLayout(borderLayout);
-		contentPanel.setToolTipText("");
-		contentPanel.setBorder(new EmptyBorder(40, 40, 40, 40));
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new BorderLayout(0, 0));
+		getContentPane().setLayout(null);
+		
+		
+		iniciarComponentes();
 		setVisible(true);
 		
-		{
-			JScrollPane scrollPane = new JScrollPane();
-			contentPanel.add(scrollPane);
-			{
-				table = new JTable();
-				scrollPane.add(table, BorderLayout.NORTH);
-			}
-			
-			Contacto c1 = new Contacto("Pedro", "691745679");
-			DefaultListModel<Contacto> listaContactos = new DefaultListModel<Contacto>();
-			listaContactos.addElement(c1);
-			listaContactos.addElement(c1);
-			listaContactos.addElement(c1);
-			listaContactos.addElement(c1);
-			listaContactos.addElement(c1);
-			listaContactos.addElement(c1);
-			listaContactos.addElement(c1);
-			listaContactos.addElement(c1);
-			listaContactos.addElement(c1);
-			listaContactos.addElement(c1);
-			listaContactos.addElement(c1);
-			listaContactos.addElement(c1);
-			listaContactos.addElement(c1);
-
-		}
-					
-		
-		{
-			JPanel buttonPane = new JPanel();
-			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-			getContentPane().add(buttonPane, BorderLayout.SOUTH);
-			
-			{
-				JButton volverButton = new JButton("Volver");
-				volverButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-					propietario.setVisible(true);
-					dispose();
-					}
-				});
-				volverButton.setActionCommand("OK");
-				buttonPane.add(volverButton);
-				getRootPane().setDefaultButton(volverButton);
-			}
-		}
 	}
 
+	private void iniciarComponentes() {	
+		String[] nombrecolumnas = {"Nombre", "Teléfono"};
+		DefaultTableModel modeloTabla = new DefaultTableModel(nombrecolumnas,0);
+		for(Contacto item : agenda.getContactos()){
+			String nombre = item.getNombre();
+			String telefono = item.getTelefono();
+			Object[] contacto = {nombre, telefono};
+			modeloTabla.addRow(contacto);
+		}
+		
+		table = new JTable();
+		table.setBounds(27, 24, 377, 192);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.setModel(modeloTabla);
+		getContentPane().add(table);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(239, 144, 2, 2);
+		table.add(scrollPane);
+		
+		JButton btnVolver = new JButton("Volver");
+		btnVolver.setBounds(351, 227, 73, 23);
+		btnVolver.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				padre.setVisible(true);
+				
+			}
+		});
+		getContentPane().add(btnVolver);
+		
+	}
 }
