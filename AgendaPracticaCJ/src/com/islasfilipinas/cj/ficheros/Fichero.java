@@ -14,7 +14,7 @@ import com.islasfilipinas.cj.agenda.*;
 //Excepcion- ClassNotFound
 public class Fichero {
 
-	public static void guardar(Agenda agenda, File file) throws IOException{
+	public static void guardar(Agenda agenda, File file) throws IOException, FileNotFoundException{
 		
 		if (file.exists()){
 			ObjectOutputStream oOutputStream=null;
@@ -33,7 +33,7 @@ public class Fichero {
 			throw new FileNotFoundException();
 	}
 	
-	public static ArrayList<Contacto> leerAgenda(File file) throws IOException, ClassNotFoundException{
+	public static ArrayList<Contacto> leerAgenda(File file) throws IOException, FileNotFoundException, ClassNotFoundException{
 		
 		if (file.exists()){
 			
