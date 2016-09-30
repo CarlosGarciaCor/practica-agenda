@@ -20,6 +20,8 @@ import com.islasfilipinas.cj.exceptions.ContactoRepetidoException;
 import java.awt.Window.Type;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 public class AgregarContacto extends JDialog{
 	private JTextField textoNombre;
@@ -40,9 +42,9 @@ public class AgregarContacto extends JDialog{
 		setTitle("Agregar contacto");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MenuPrincipal.class.getResource("/com/islasfilipinas/cj/interfaz/iconos/icono_agenda.png")));
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-		setBounds(padre.getX()+50, padre.getY()+50, 304, 289);
+		setBounds(padre.getX()+50, padre.getY()+50, 320, 289);
 		setModal(true);
-		setLayout(null);
+		getContentPane().setLayout(null);
 		
 		/*
 		 * Etiqueta de texto. Indica donde deberá escribir el nombre el usuario.
@@ -51,12 +53,29 @@ public class AgregarContacto extends JDialog{
 		JLabel labelNombre = new JLabel("Nombre:");
 		labelNombre.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		labelNombre.setBounds(72, 63, 55, 14);
-		add(labelNombre);
+		getContentPane().add(labelNombre);
 		
 		textoNombre = new JTextField();
-		textoNombre.setBounds(128, 61, 86, 20);
+		int limiteNombre = 20;
+		textoNombre.setBounds(128, 61, 143, 20);
 		textoNombre.setColumns(10);
-		add(textoNombre);
+		textoNombre.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				if (textoNombre.getText().length() >= limiteNombre){
+					e.consume();
+					Toolkit.getDefaultToolkit().beep();}
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+			}
+		});
+		getContentPane().add(textoNombre);
 		
 		/*
 		 * Etiqueta de texto. Indica donde deberá escribir el teléfono el usuario.
@@ -65,12 +84,28 @@ public class AgregarContacto extends JDialog{
 		JLabel labelTelfono = new JLabel("Tel\u00E9fono:");
 		labelTelfono.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		labelTelfono.setBounds(72, 112, 68, 17);
-		add(labelTelfono);
+		getContentPane().add(labelTelfono);
 		
 		textoTlfn = new JTextField();
-		textoTlfn.setBounds(128, 111, 86, 20);
+		int limiteTelefono = 13;
+		textoTlfn.setBounds(128, 111, 143, 20);
 		textoTlfn.setColumns(10);
-		add(textoTlfn);
+		textoTlfn.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				if (textoTlfn.getText().length() >= limiteTelefono){
+					e.consume();
+					Toolkit.getDefaultToolkit().beep();}
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+			}
+			@Override
+			public void keyPressed(KeyEvent e) {
+			}
+		});
+		getContentPane().add(textoTlfn);
 		
 		/*
 		 * Estas dos etiquetas son dos imágenes que acompañan a las etiquetas de texto.
@@ -78,19 +113,19 @@ public class AgregarContacto extends JDialog{
 		JLabel label = new JLabel("");
 		label.setIcon(new ImageIcon(AgregarContacto.class.getResource("/com/islasfilipinas/cj/interfaz/iconos/aniadircont.png")));
 		label.setBounds(33, 48, 32, 41);
-		add(label);
+		getContentPane().add(label);
 		
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setIcon(new ImageIcon(AgregarContacto.class.getResource("/com/islasfilipinas/cj/interfaz/iconos/aniadirtlf.png")));
 		lblNewLabel.setBounds(33, 100, 32, 32);
-		add(lblNewLabel);
+		getContentPane().add(lblNewLabel);
 		
 		/*
 		 * Los botones inferiores para bien añadir el contacto o bien volver al menú anterior.
 		 * Se añaden junto a ellos los correspondientes listener y eventos.
 		 */
 		JButton botonAniadir = new JButton("A\u00F1adir");
-		botonAniadir.setBounds(22, 203, 89, 23);
+		botonAniadir.setBounds(47, 203, 89, 23);
 		botonAniadir.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -112,12 +147,11 @@ public class AgregarContacto extends JDialog{
 					mostrarPopupYaExiste();
 				}
 			}
-
 		});
-		add(botonAniadir);
+		getContentPane().add(botonAniadir);
 		
 		JButton botonVolver = new JButton("Volver");
-		botonVolver.setBounds(168, 203, 89, 23);
+		botonVolver.setBounds(169, 203, 89, 23);
 		botonVolver.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -125,7 +159,7 @@ public class AgregarContacto extends JDialog{
 				
 			}
 		});
-		add(botonVolver);
+		getContentPane().add(botonVolver);
 		
 		setVisible(true);
 		
