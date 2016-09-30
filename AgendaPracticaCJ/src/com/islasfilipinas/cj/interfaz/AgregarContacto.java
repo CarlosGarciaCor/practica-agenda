@@ -96,8 +96,18 @@ public class AgregarContacto extends JDialog{
 			public void actionPerformed(ActionEvent e) {
 				Contacto nuevo = new Contacto (textoNombre.getText(), textoTlfn.getText());
 				try {
-					agenda.annadir(nuevo);
-					mostrarPopupAniadido();
+					if (textoNombre.getText().matches("[a-zA-Z]+")
+							&& textoTlfn.getText().matches("[0-9]+")){
+						agenda.annadir(nuevo);
+						mostrarPopupAniadido();
+					}
+					else {
+						if (mostrarPopupContactoRaro()==0){
+							agenda.annadir(nuevo);
+							mostrarPopupAniadido();
+						}
+					}
+						
 				} catch (ContactoRepetidoException e1) {
 					mostrarPopupYaExiste();
 				}
@@ -135,5 +145,12 @@ public class AgregarContacto extends JDialog{
 			    "Completado",
 			    JOptionPane.INFORMATION_MESSAGE,
 			    new ImageIcon(AgregarContacto.class.getResource("/com/islasfilipinas/cj/interfaz/iconos/aniadircont.png")));
+	}
+	
+	private int mostrarPopupContactoRaro() {
+		return JOptionPane.showConfirmDialog(this, 
+				"El contacto que intenta añadir es algo inusual, "
+				+ "\n¿está seguro de que quiere añadirlo?", "Contacto inusual", 
+				JOptionPane.YES_NO_OPTION);
 	}
 }

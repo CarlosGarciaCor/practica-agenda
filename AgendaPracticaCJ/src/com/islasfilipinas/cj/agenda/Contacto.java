@@ -1,6 +1,7 @@
 package com.islasfilipinas.cj.agenda;
 
 import java.io.Serializable;
+import java.util.InputMismatchException;
 
 public class Contacto implements Serializable, Comparable<Contacto> {
 
@@ -11,10 +12,13 @@ public class Contacto implements Serializable, Comparable<Contacto> {
 	//El constructor de Contactos hace una validación no muy restrictiva, solo del número de
 	//caracteres de los campos, para poder dar luego más flexibilidad a la aplicación.
 	public Contacto (String _nombre, String _telefono){
-		if (_nombre.length()<=20 && _nombre.length()>=2
-				&& _telefono.length()>=3 && _telefono.length()<=13)
-		this.nombre=_nombre;
-		this.telefono=_telefono;
+		if (_nombre.length()<=20 && _nombre.length()>=1
+				&& _telefono.length()>=3 && _telefono.length()<=13){
+			this.nombre=_nombre;
+			this.telefono=_telefono;
+		}
+		else
+			throw new InputMismatchException("El contacto que intenta añadir tiene un formato no válido.");
 	}
 	
 	public int compareTo(Contacto contacto) {
