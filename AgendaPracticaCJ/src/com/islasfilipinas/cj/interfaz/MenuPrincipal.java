@@ -4,20 +4,27 @@ package com.islasfilipinas.cj.interfaz;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.islasfilipinas.cj.agenda.Agenda;
+import com.islasfilipinas.cj.exceptions.FicheroNoValidoException;
 
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.IOException;
 
 public class MenuPrincipal extends JFrame {
 	
 	private Agenda agenda;
+	private File file=null;
 	/**
 	 * Main de la aplicación. Lanza el menú principal desde el cual se pueden realizar todas las acciones deseadas.
 	 */
@@ -47,7 +54,6 @@ public class MenuPrincipal extends JFrame {
 		setLayout(new FlowLayout());
 		iniciarComponentes();
 		agenda = new Agenda();
-		
 	}
 
 	public Agenda getAgenda() {
@@ -80,9 +86,7 @@ public class MenuPrincipal extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
-				cargarAgenda();
-				
+				cargarAgenda(e);
 			}
 		});
 		menuAgenda.add(opcionCargarAgenda);
@@ -92,9 +96,7 @@ public class MenuPrincipal extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
 				guardarAgenda();
-				
 			}
 			
 		});
@@ -105,7 +107,6 @@ public class MenuPrincipal extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
 				mostrarAgenda();
 			}
 		});
@@ -168,23 +169,117 @@ public class MenuPrincipal extends JFrame {
 	 * de los eventos.
 	 */
 	private void mostrarAgenda(){
+		if (agenda.getContactos().isEmpty()){
+			mostrarPopupNoHayAgendaCargada();
+		}
 		Mostrar mostrarAgenda = new Mostrar(this);
 	}
 	
+	private void mostrarPopupNoHayAgendaCargada() {
+		// TODO Auto-generated method stub
+		JOptionPane.showMessageDialog(this, 
+				"No hay ninguna agenda cargada.", "",
+				JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	/*
+	 * 
+	 */
 	private void guardarAgenda() {
+		if (agenda.getContactos().isEmpty()){
+			mostrarPopupNoHayAgendaCargada();
+		}
+		else if (this.file!=null){
+			try {
+				agenda.guardar(this.file);
+				mostrarPopupAgendaGuardadaExito();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				mostrarPopupIOException();
+			}
+		}
+		else {
+			JFileChooser jfc=new JFileChooser();
+			
+			jfc.setDialogType(JFileChooser.SAVE_DIALOG);
+			jfc.setCurrentDirectory(new File("C:/Users"));
+			
+			if (jfc.showOpenDialog(this)==JFileChooser.APPROVE_OPTION){
+				try {
+					agenda.guardar(jfc.getSelectedFile());
+					mostrarPopupAgendaGuardadaExito();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					mostrarPopupIOException();
+				}
+			};
+			
+		}
+		
+		
 		
 	}
 	
-	private void cargarAgenda() {
+	private void mostrarPopupAgendaGuardadaExito() {
+		// TODO Auto-generated method stub
+		JOptionPane.showMessageDialog(this, 
+				"Agenda guardada con éxito", "Guardar",
+				JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	// CARGAR AGENDA DESDE EL FICHERO - FILECHOOSER
+	private void cargarAgenda(ActionEvent e) {
+		
+		JFileChooser jfc=new JFileChooser();
+		
+		jfc.setDialogType(JFileChooser.APPROVE_OPTION);
+		
+		//Si esta ruta absoluta no existe, se coloca en el directorio del proyecto
+		//de forma automática
+		File currentFile=new File(".");
+		
+		if (currentFile.exists())
+			jfc.setCurrentDirectory(currentFile);
+		
+		if (jfc.showOpenDialog(this)==JFileChooser.APPROVE_OPTION){
+			try {
+				this.file=jfc.getSelectedFile();
+				agenda.cargar(jfc.getSelectedFile());
+				mostrarPopupAgendaCargada();
+			} catch (ClassNotFoundException | FicheroNoValidoException e1) {
+				mostrarPopupFicheroInvalido();
+			} catch (IOException e1) {
+				mostrarPopupIOException();
+			}
+		}
 		
 	}
 	
+	private void mostrarPopupAgendaCargada() {
+		JOptionPane.showMessageDialog(this, 
+				"Agenda cargada con éxito.", "Cargar agenda",
+				JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	private void mostrarPopupFicheroInvalido() {
+		JOptionPane.showMessageDialog(this, 
+				"¡El fichero que está intentando cargar no es una agenda!.", "Fichero inválido",
+				JOptionPane.ERROR_MESSAGE);
+	}
+
+	private void mostrarPopupIOException() {
+		JOptionPane.showMessageDialog(this, 
+				"Ha ocurrido una excepción inesperada, "
+				+ "\npor favor vuelva a intentarlo.", "Error",
+				JOptionPane.ERROR_MESSAGE);
+	}
+
 	private void agregarContacto() {
 		AgregarContacto agregar = new AgregarContacto(this);
 	}
 	
 	private void modificarBorrarContacto() {
-	
+		 BorrarModificar borrarmodificar = new BorrarModificar(this);
 	}
 	
 	private void mostrarAyuda(){
