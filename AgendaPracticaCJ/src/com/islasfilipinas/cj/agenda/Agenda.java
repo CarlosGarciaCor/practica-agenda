@@ -23,6 +23,7 @@ public class Agenda implements Serializable{
 			this.contactos=Fichero.leerAgenda(file);
 		}
 		else
+			//RETOCAR
 			throw new FicheroNoValidoException("El fichero no existe o no es válido");
 	}
 
