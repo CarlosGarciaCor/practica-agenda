@@ -1,6 +1,7 @@
 package com.islasfilipinas.cj.interfaz;
 
 
+import java.awt.Desktop;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 
@@ -10,7 +11,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.islasfilipinas.cj.agenda.Agenda;
 import com.islasfilipinas.cj.exceptions.FicheroNoValidoException;
@@ -107,7 +107,10 @@ public class MenuPrincipal extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				mostrarAgenda();
+				if (agenda.getContactos().isEmpty())
+					mostrarPopupNoHayAgendaCargada();
+				else
+					mostrarAgenda();
 			}
 		});
 		menuAgenda.add(opcionMostrarAgenda);
@@ -137,30 +140,64 @@ public class MenuPrincipal extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
-				modificarBorrarContacto();
+				if (agenda.getContactos().isEmpty())
+					mostrarPopupNoHayAgendaCargada();
+				else
+					modificarBorrarContacto();
 			}
 		});
 		menuContactos.add(opcionModificarBorrarContacto);
 		
+		JMenuItem opcionBuscarContacto = new JMenuItem("Buscar");
+		opcionBuscarContacto.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (agenda.getContactos().isEmpty())
+					mostrarPopupNoHayAgendaCargada();
+				else
+					buscar();
+			}
+			
+		});
+		menuContactos.add(opcionBuscarContacto);
 		
-		// --------------------------------------- AYUDA ----------------------------------------
+		
+		// --------------------------------------- SISTEMA ----------------------------------------
 		
 		/*
 		 * Constructor de la opción de menú para ver la ayuda referente al programa.
 		 * También está el método para capturar el evento mediante un listener y el
 		 * método para añadir la opción a la barra de menú.
 		 */
-		JMenuItem opcionAyuda = new JMenu("Ayuda");
+		JMenu menuSistema=new JMenu("Sistema");
+		menuBar.add(menuSistema);
+		
+		JMenuItem opcionAyuda = new JMenuItem("Ayuda");
 		opcionAyuda.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				mostrarAyuda();
 				
 			}
 		});
-		menuBar.add(opcionAyuda);
+		menuSistema.add(opcionAyuda);
+		
+		JMenuItem opcionSalir = new JMenuItem("Salir");
+		opcionSalir.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					System.exit(0);
+				} catch (Throwable e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+		});
+		menuSistema.add(opcionSalir);
 	}
 	
 	
@@ -169,16 +206,13 @@ public class MenuPrincipal extends JFrame {
 	 * de los eventos.
 	 */
 	private void mostrarAgenda(){
-		if (agenda.getContactos().isEmpty()){
-			mostrarPopupNoHayAgendaCargada();
-		}
 		Mostrar mostrarAgenda = new Mostrar(this);
 	}
 	
 	private void mostrarPopupNoHayAgendaCargada() {
 		// TODO Auto-generated method stub
 		JOptionPane.showMessageDialog(this, 
-				"No hay ninguna agenda cargada.", "",
+				"No hay ninguna agenda cargada.", "Información",
 				JOptionPane.INFORMATION_MESSAGE);
 	}
 
@@ -243,6 +277,10 @@ public class MenuPrincipal extends JFrame {
 		
 		if (jfc.showOpenDialog(this)==JFileChooser.APPROVE_OPTION){
 			try {
+				/*FileReader fr=new FileReader(jfc.getSelectedFile());
+				if (fr.read()==-1){
+					mostrarPopupFicheroVacio();
+				}*/
 				this.file=jfc.getSelectedFile();
 				agenda.cargar(jfc.getSelectedFile());
 				mostrarPopupAgendaCargada();
@@ -252,9 +290,8 @@ public class MenuPrincipal extends JFrame {
 				mostrarPopupIOException();
 			}
 		}
-		
 	}
-	
+
 	private void mostrarPopupAgendaCargada() {
 		JOptionPane.showMessageDialog(this, 
 				"Agenda cargada con éxito.", "Cargar agenda",
@@ -263,7 +300,7 @@ public class MenuPrincipal extends JFrame {
 
 	private void mostrarPopupFicheroInvalido() {
 		JOptionPane.showMessageDialog(this, 
-				"¡El fichero que está intentando cargar no es una agenda!.", "Fichero inválido",
+				"¡El fichero que está intentando cargar no es una agenda!", "Fichero inválido",
 				JOptionPane.ERROR_MESSAGE);
 	}
 
@@ -283,6 +320,10 @@ public class MenuPrincipal extends JFrame {
 	}
 	
 	private void mostrarAyuda(){
+		
+	}
+	
+	private void buscar(){
 		
 	}
 

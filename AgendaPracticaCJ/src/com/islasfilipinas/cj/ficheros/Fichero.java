@@ -53,5 +53,4 @@ public class Fichero {
 		else
 			throw new FileNotFoundException();
 	}
-	
 }

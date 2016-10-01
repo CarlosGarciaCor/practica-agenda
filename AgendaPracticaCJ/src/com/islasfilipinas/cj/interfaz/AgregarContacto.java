@@ -22,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.InputMismatchException;
 
 public class AgregarContacto extends JDialog{
 	private JTextField textoNombre;
@@ -129,8 +130,9 @@ public class AgregarContacto extends JDialog{
 		botonAniadir.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Contacto nuevo = new Contacto (textoNombre.getText(), textoTlfn.getText());
+				
 				try {
+					Contacto nuevo = new Contacto (textoNombre.getText(), textoTlfn.getText());
 					if (textoNombre.getText().matches("[a-zA-Z]+")
 							&& textoTlfn.getText().matches("[0-9]+")){
 						agenda.annadir(nuevo);
@@ -149,8 +151,13 @@ public class AgregarContacto extends JDialog{
 						
 				} catch (ContactoRepetidoException e1) {
 					mostrarPopupYaExiste();
+				} catch (InputMismatchException e2) {
+					mostrarPopupCampoSinRellenar();
 				}
+				
 			}
+
+			
 		});
 		getContentPane().add(botonAniadir);
 		
@@ -190,5 +197,13 @@ public class AgregarContacto extends JDialog{
 				"El contacto que intenta añadir es algo inusual, "
 				+ "\n¿está seguro de que quiere añadirlo?", "Contacto inusual", 
 				JOptionPane.YES_NO_OPTION);
+	}
+	
+	private void mostrarPopupCampoSinRellenar() {
+		// TODO Auto-generated method stub
+		JOptionPane.showMessageDialog(this,
+			    "Es necesario que rellene ambos campos para continuar.",
+			    "Advertencia",
+			    JOptionPane.WARNING_MESSAGE);
 	}
 }

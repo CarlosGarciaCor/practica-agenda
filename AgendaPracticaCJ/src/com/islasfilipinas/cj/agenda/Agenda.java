@@ -52,8 +52,17 @@ public class Agenda implements Serializable{
 	
 	//Más de lo mismo
 	public void borrar(Contacto contacto) throws ContactoRepetidoException{
-		if (this.containsContacto(contacto))
+
+		if (this.containsContacto(contacto)){
 			this.contactos.remove(contacto);
+			for (Contacto item: this.contactos){
+				if (contacto.getNombre()==item.getNombre()){
+					contacto=item;
+					this.contactos.remove(contacto);
+					break;
+				}
+			}
+		}
 		else
 			throw new ContactoRepetidoException("El contacto que intenta borrar no existe.");
 	}
@@ -62,8 +71,16 @@ public class Agenda implements Serializable{
 	public void modificar(Contacto contacto, Contacto contactoMod) throws ContactoRepetidoException{
 		//Si el contacto a modificar existe y la modificación realizada no:
 		if (this.containsContacto(contacto) && !this.containsContacto(contactoMod)){
-			this.contactos.remove(contacto);
-			this.contactos.add(contactoMod);
+			Contacto aux=null;
+			for (Contacto item: this.contactos){
+				if (contacto.getNombre()==item.getNombre()){
+					aux=item;
+				}
+			}
+			if (aux!=null){
+				this.contactos.remove(aux);
+				this.contactos.add(contactoMod);
+			}
 		}
 		else if(this.containsContacto(contactoMod))
 			throw new ContactoRepetidoException("Está intentando modificar un contacto por otro que ya existe.");
@@ -75,7 +92,7 @@ public class Agenda implements Serializable{
 	//o null si no.
 	public Contacto buscarPorNombre(String nombre){
 		for (Contacto contacto: this.contactos){
-			if (nombre==contacto.getNombre())
+			if (nombre.equalsIgnoreCase(contacto.getNombre()))
 				return contacto;
 		}
 		return null;
@@ -83,7 +100,7 @@ public class Agenda implements Serializable{
 	
 	public Contacto buscarPorTelefono(String tfno){
 		for (Contacto contacto: this.contactos){
-			if (tfno==contacto.getTelefono())
+			if (tfno.equalsIgnoreCase(contacto.getTelefono()))
 				return contacto;
 		}
 		return null;
