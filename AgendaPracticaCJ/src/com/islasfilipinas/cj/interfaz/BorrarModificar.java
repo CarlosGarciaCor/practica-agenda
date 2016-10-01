@@ -43,32 +43,12 @@ public class BorrarModificar extends JDialog{
 		setVisible(true);
 	}
 	
-	private void iniciarComponentes(JFrame padre) {
-
-		String[] nombrecolumnas = {"Nombre", "Teléfono"};
-		DefaultTableModel modeloTabla = new DefaultTableModel(nombrecolumnas,0);
-		agenda.getContactos().sort(new Comparator<Contacto>() {
-
-			@Override
-			public int compare(Contacto o1, Contacto o2) {
-				 return (o1.getNombre().compareTo(o2.getNombre()));
-			}
-		});
-		for(Contacto item : agenda.getContactos()){
-			String nombre = item.getNombre();
-			String telefono = item.getTelefono();
-			Object[] contacto = {nombre, telefono};
-			modeloTabla.addRow(contacto);
-		}
-		
-		
-		
-		
+	private void iniciarComponentes(JFrame padre) {		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(38, 22, 337, 170);
 		getContentPane().add(scrollPane);
 		
-		tabla = new JTable(modeloTabla){
+		tabla = new JTable(){
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
@@ -96,12 +76,9 @@ public class BorrarModificar extends JDialog{
 		tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tabla.setFillsViewportHeight(true);
 		tabla.setEnabled(true);
+		hacerModeloTabla(tabla);
 		scrollPane.setViewportView(tabla);
-		
-		
-		
-		
-		
+
 		
 		
 		JButton btnVolver = new JButton("Volver");
@@ -127,6 +104,7 @@ public class BorrarModificar extends JDialog{
 						try {
 							Contacto aBorrar = new Contacto(tabla.getValueAt(filaSeleccionada, 0).toString(), tabla.getValueAt(filaSeleccionada, 1).toString());
 							agenda.borrar(aBorrar);
+							hacerModeloTabla(tabla);
 						} catch (ContactoRepetidoException e1) {
 							
 						}
@@ -147,6 +125,7 @@ public class BorrarModificar extends JDialog{
 			public void actionPerformed(ActionEvent e) {
 				if (filaSeleccionada != -1){
 					ModificarContacto modificar = new ModificarContacto(padre, tabla.getValueAt(filaSeleccionada, 0).toString(), tabla.getValueAt(filaSeleccionada, 1).toString());
+					hacerModeloTabla(tabla);
 				}
 				else{
 					JOptionPane.showMessageDialog(BorrarModificar.this, "Necesitas elegir un contacto para poder modificarlo.",
@@ -156,5 +135,24 @@ public class BorrarModificar extends JDialog{
 		});
 		getContentPane().add(botonModificar);
 		
+	}
+
+	private void hacerModeloTabla(JTable tabla) {
+		String[] nombrecolumnas = {"Nombre", "Teléfono"};
+		DefaultTableModel modeloTabla = new DefaultTableModel(nombrecolumnas,0);
+		agenda.getContactos().sort(new Comparator<Contacto>() {
+
+			@Override
+			public int compare(Contacto o1, Contacto o2) {
+				 return (o1.getNombre().compareTo(o2.getNombre()));
+			}
+		});
+		for(Contacto item : agenda.getContactos()){
+			String nombre = item.getNombre();
+			String telefono = item.getTelefono();
+			Object[] contacto = {nombre, telefono};
+			modeloTabla.addRow(contacto);
+		}
+		tabla.setModel(modeloTabla);
 	}
 }
