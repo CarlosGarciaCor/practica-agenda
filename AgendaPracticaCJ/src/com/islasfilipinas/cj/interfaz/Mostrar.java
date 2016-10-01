@@ -33,7 +33,7 @@ public class Mostrar extends JDialog {
 		agenda = ((MenuPrincipal) padre).getAgenda();
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Mostrar.class.getResource("/com/islasfilipinas/cj/interfaz/iconos/icono_agenda.png")));
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(padre.getX()+50, padre.getY()+50, 450, 300);
 		getContentPane().setLayout(null);
 		
 		
@@ -73,7 +73,12 @@ public class Mostrar extends JDialog {
 		scrollPane.setBounds(35, 35, 364, 170);
 		getContentPane().add(scrollPane);
 		
-		table = new JTable(modeloTabla);
+		table = new JTable(modeloTabla){
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
 		table.setFillsViewportHeight(true);
 		scrollPane.setViewportView(table);
 		getContentPane().add(btnVolver);
