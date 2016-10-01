@@ -1,64 +1,52 @@
 package com.islasfilipinas.cj.interfaz;
 
+import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import java.awt.Font;
-
-import javax.swing.JButton;
-import javax.swing.ImageIcon;
-
 import com.islasfilipinas.cj.agenda.Agenda;
 import com.islasfilipinas.cj.agenda.Contacto;
 import com.islasfilipinas.cj.exceptions.ContactoRepetidoException;
 
-import java.awt.Window.Type;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
-public class AgregarContacto extends JDialog{
+public class ModificarContacto extends JDialog{
+	
+	private Agenda agenda;
 	private JTextField textoNombre;
 	private JTextField textoTlfn;
-	private Agenda agenda;
 	
-	/**
-	 * Constructor del JDialog AgregarContacto. Como su nombre indica permite agregar un contacto a la agenda previamente cargada.
-	 * @param padre Este parámetro es el JFrame.
-	 */
-	public AgregarContacto(JFrame padre){
+	public ModificarContacto(JFrame padre, String nombreVie, String tlfnVie) {
 		super(padre);
-		agenda=((MenuPrincipal) padre).getAgenda();
-		/* 
-		 * Cinco métodos básicos que sirven para colocar el título, el icono, 
-		 * la operación de cierre, el tamaño y el layout.
-		 */
-		setTitle("Agregar contacto");
+		agenda = ((MenuPrincipal) padre).getAgenda();
+		setTitle("Modificar contacto: " + nombreVie);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MenuPrincipal.class.getResource("/com/islasfilipinas/cj/interfaz/iconos/icono_agenda.png")));
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-		setBounds(padre.getX()+50, padre.getY()+50, 320, 289);
+		setBounds(padre.getX()+50, padre.getY()+50, 320, 268);
 		setModal(true);
 		getContentPane().setLayout(null);
 		
-		/*
-		 * Etiqueta de texto. Indica donde deberá escribir el nombre el usuario.
-		 * El JTextField que le sigue es el campo de texto donde el usuario puede escribir.
-		 */
-		JLabel labelNombre = new JLabel("Nombre:");
+		
+		JLabel labelNombre = new JLabel("Nuevo nombre:");
 		labelNombre.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		labelNombre.setBounds(72, 63, 55, 14);
+		labelNombre.setBounds(31, 74, 93, 14);
 		getContentPane().add(labelNombre);
+		
 		
 		textoNombre = new JTextField();
 		int limiteNombre = 20;
-		textoNombre.setBounds(128, 61, 143, 20);
+		textoNombre.setBounds(128, 72, 143, 20);
 		textoNombre.setColumns(10);
+		textoNombre.setText(nombreVie);
 		textoNombre.addKeyListener(new KeyListener() {
 			
 			@Override
@@ -77,19 +65,17 @@ public class AgregarContacto extends JDialog{
 		});
 		getContentPane().add(textoNombre);
 		
-		/*
-		 * Etiqueta de texto. Indica donde deberá escribir el teléfono el usuario.
-		 * El JTextField que le sigue es el campo de texto donde el usuario puede escribir.
-		 */
-		JLabel labelTelfono = new JLabel("Tel\u00E9fono:");
+		
+		JLabel labelTelfono = new JLabel("Nuevo tel\u00E9fono:");
 		labelTelfono.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		labelTelfono.setBounds(72, 112, 68, 17);
+		labelTelfono.setBounds(31, 121, 93, 17);
 		getContentPane().add(labelTelfono);
 		
 		textoTlfn = new JTextField();
 		int limiteTelefono = 13;
-		textoTlfn.setBounds(128, 111, 143, 20);
+		textoTlfn.setBounds(128, 120, 143, 20);
 		textoTlfn.setColumns(10);
+		textoTlfn.setText(tlfnVie);
 		textoTlfn.addKeyListener(new KeyListener() {
 			
 			@Override
@@ -107,43 +93,26 @@ public class AgregarContacto extends JDialog{
 		});
 		getContentPane().add(textoTlfn);
 		
-		/*
-		 * Estas dos etiquetas son dos imágenes que acompañan a las etiquetas de texto.
-		 */
-		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon(AgregarContacto.class.getResource("/com/islasfilipinas/cj/interfaz/iconos/aniadircont.png")));
-		label.setBounds(33, 48, 32, 41);
-		getContentPane().add(label);
 		
-		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setIcon(new ImageIcon(AgregarContacto.class.getResource("/com/islasfilipinas/cj/interfaz/iconos/aniadirtlf.png")));
-		lblNewLabel.setBounds(33, 100, 32, 32);
-		getContentPane().add(lblNewLabel);
-		
-		/*
-		 * Los botones inferiores para bien añadir el contacto o bien volver al menú anterior.
-		 * Se añaden junto a ellos los correspondientes listener y eventos.
-		 */
-		JButton botonAniadir = new JButton("A\u00F1adir");
-		botonAniadir.setBounds(47, 203, 89, 23);
+		JButton botonAniadir = new JButton("Modificar");
+		botonAniadir.setBounds(41, 175, 89, 23);
 		botonAniadir.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				Contacto viejo = new Contacto (nombreVie, tlfnVie);
 				Contacto nuevo = new Contacto (textoNombre.getText(), textoTlfn.getText());
 				try {
 					if (textoNombre.getText().matches("[a-zA-Z]+")
 							&& textoTlfn.getText().matches("[0-9]+")){
-						agenda.annadir(nuevo);
-						mostrarPopupAniadido();
-						textoNombre.setText("");
-						textoTlfn.setText("");
+						agenda.modificar(viejo, nuevo);;
+						mostrarPopupModificado();
+						dispose();
 					}
 					else {
 						if (mostrarPopupContactoRaro()==0){
-							agenda.annadir(nuevo);
-							mostrarPopupAniadido();
-							textoNombre.setText("");
-							textoTlfn.setText("");
+							agenda.modificar(viejo, nuevo);
+							mostrarPopupModificado();
+							dispose();
 						}
 					}
 						
@@ -155,7 +124,7 @@ public class AgregarContacto extends JDialog{
 		getContentPane().add(botonAniadir);
 		
 		JButton botonVolver = new JButton("Volver");
-		botonVolver.setBounds(169, 203, 89, 23);
+		botonVolver.setBounds(164, 175, 89, 23);
 		botonVolver.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -165,21 +134,27 @@ public class AgregarContacto extends JDialog{
 		});
 		getContentPane().add(botonVolver);
 		
+		JLabel lblModiqueElCampo = new JLabel("Modique el campo o campos deseados.");
+		lblModiqueElCampo.setBounds(61, 11, 186, 14);
+		getContentPane().add(lblModiqueElCampo);
+		
+		JLabel lbllosCamposPor = new JLabel("(Los campos por defecto son los propios del contacto)");
+		lbllosCamposPor.setBounds(21, 30, 261, 20);
+		getContentPane().add(lbllosCamposPor);
+		
 		setVisible(true);
-		
-		
 	}
 	
 	private void mostrarPopupYaExiste() {
 		JOptionPane.showMessageDialog(this,
-			    "El contacto que intenta añadir ya existe.",
+			    "Está escribiendo los datos de un contacto ya existente.\n Inténtelo de nuevo por favor.",
 			    "Advertencia",
 			    JOptionPane.WARNING_MESSAGE);
 	}
 	
-	private void mostrarPopupAniadido() {
+	private void mostrarPopupModificado() {
 		JOptionPane.showMessageDialog(this,
-			    "El contacto " + textoNombre.getText() + " ha sido añadido.",
+			    "El nuevo nombre de su contacto es " + textoNombre.getText() + ".\nLa modificación ha sido guardada.",
 			    "Completado",
 			    JOptionPane.INFORMATION_MESSAGE,
 			    new ImageIcon(AgregarContacto.class.getResource("/com/islasfilipinas/cj/interfaz/iconos/aniadircont.png")));
