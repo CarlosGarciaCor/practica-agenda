@@ -40,7 +40,7 @@ public class AgregarContacto extends JDialog{
 		 * Cinco métodos básicos que sirven para colocar el título, el icono, 
 		 * la operación de cierre, el tamaño y el layout.
 		 */
-		setTitle("Agregar contacto");
+		setTitle("Añadir contacto");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MenuPrincipal.class.getResource("/com/islasfilipinas/cj/interfaz/iconos/icono_agenda.png")));
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		setBounds(padre.getX()+50, padre.getY()+50, 320, 289);
@@ -154,7 +154,6 @@ public class AgregarContacto extends JDialog{
 				} catch (InputMismatchException e2) {
 					mostrarPopupCampoSinRellenar();
 				}
-				
 			}
 
 			

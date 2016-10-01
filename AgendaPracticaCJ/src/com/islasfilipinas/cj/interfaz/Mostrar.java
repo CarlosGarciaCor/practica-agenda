@@ -31,6 +31,7 @@ public class Mostrar extends JDialog {
 	public Mostrar(JFrame padre) {
 		super(padre);
 		agenda = ((MenuPrincipal) padre).getAgenda();
+		setTitle("Mostrar");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Mostrar.class.getResource("/com/islasfilipinas/cj/interfaz/iconos/icono_agenda.png")));
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		setBounds(padre.getX()+50, padre.getY()+50, 450, 300);
