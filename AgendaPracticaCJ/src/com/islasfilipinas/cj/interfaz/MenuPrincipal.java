@@ -10,6 +10,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.islasfilipinas.cj.agenda.Agenda;
 import com.islasfilipinas.cj.exceptions.FicheroNoValidoException;
@@ -21,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+
 
 public class MenuPrincipal extends JFrame {
 	
@@ -120,7 +122,9 @@ public class MenuPrincipal extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (agenda.getContactos().isEmpty())
+				if (file == null)
+					mostrarPopupAgendaNoCargada();
+				else if (agenda.getContactos().isEmpty())
 					mostrarPopupAgendaVacia();
 				else
 					mostrarAgenda();
@@ -143,7 +147,10 @@ public class MenuPrincipal extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				agregarContacto();
+				if (file==null)
+					mostrarPopupAgendaNoCargada();
+				else
+					agregarContacto();
 			}
 		});
 		menuContactos.add(opcionAgregarContacto);
@@ -153,7 +160,9 @@ public class MenuPrincipal extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (agenda.getContactos().isEmpty())
+				if (file == null)
+					mostrarPopupAgendaNoCargada();
+				else if (agenda.getContactos().isEmpty())
 					mostrarPopupAgendaVacia();
 				else
 					modificarBorrarContacto();
@@ -166,7 +175,9 @@ public class MenuPrincipal extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (agenda.getContactos().isEmpty())
+				if (file == null)
+					mostrarPopupAgendaNoCargada();
+				else if (agenda.getContactos().isEmpty())
 					mostrarPopupAgendaVacia();
 				else
 					buscar();
@@ -215,6 +226,8 @@ public class MenuPrincipal extends JFrame {
 			}
 		});
 		menuSistema.add(opcionSalir);
+		
+
 	}
 	
 	private void salir() {
@@ -254,20 +267,24 @@ public class MenuPrincipal extends JFrame {
 	
 	private void crearArchivo(){
 		JFileChooser jfc=new JFileChooser();
-		jfc.setDialogType(JFileChooser.OPEN_DIALOG);
+		jfc.setDialogType(JFileChooser.SAVE_DIALOG);
 		jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		jfc.setCurrentDirectory(new File("C:/Users/"+System.getProperty("user.name")+"/Desktop"));
 		
 		if (jfc.showOpenDialog(this)==JFileChooser.APPROVE_OPTION){
 			this.file=jfc.getSelectedFile();
+			
 			if (this.file.exists()){
 				mostrarPopupSobreescribir();
 			}
 			else {
 				try {
-					this.file.createNewFile();
-					agenda.getContactos().clear();
-					agenda.guardar(file);
+					String nombreVie = file.getAbsolutePath();
+					if (!this.file.getName().endsWith(".ag"))
+						file = new File(nombreVie+".ag");
+						this.file.createNewFile();
+						agenda.getContactos().clear();
+						agenda.guardar(file);
 				} catch (IOException e) {
 					mostrarPopupIOException();
 				}
@@ -302,6 +319,15 @@ public class MenuPrincipal extends JFrame {
 				"La agenda está vacía", "Información",
 				JOptionPane.INFORMATION_MESSAGE);
 	}
+	
+	private void mostrarPopupAgendaNoCargada() {
+		// TODO Auto-generated method stub
+		JOptionPane.showMessageDialog(this, 
+				"La agenda no ha sido cargada."
+				+ "\nUtilice la opción nueva agenda del menú para crear una nueva agenda."
+				+ "\nO la opción cargar para utilizar una existente.", "Información",
+				JOptionPane.INFORMATION_MESSAGE);
+	}
 
 	/*
 	 * 
@@ -320,21 +346,7 @@ public class MenuPrincipal extends JFrame {
 			}
 		}
 		else {
-			JFileChooser jfc=new JFileChooser();
-			
-			jfc.setDialogType(JFileChooser.SAVE_DIALOG);
-			jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			jfc.setCurrentDirectory(new File("C:/Users/"+System.getProperty("user.name")+"/Desktop"));
-			
-			if (jfc.showOpenDialog(this)==JFileChooser.APPROVE_OPTION){
-				try {
-					agenda.guardar(jfc.getSelectedFile());
-					mostrarPopupAgendaGuardadaExito();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					mostrarPopupIOException();
-				}
-			};
+			mostrarPopupAgendaVacia();
 		}
 	}
 	
@@ -349,6 +361,9 @@ public class MenuPrincipal extends JFrame {
 	private void cargarAgenda(ActionEvent e) {
 		
 		JFileChooser jfc=new JFileChooser();
+		FileNameExtensionFilter agFiltro = new FileNameExtensionFilter("Ficheros agenda (*.ag)", ".ag");
+		jfc.addChoosableFileFilter(agFiltro);
+        jfc.setFileFilter(agFiltro);
 		
 		jfc.setDialogType(JFileChooser.APPROVE_OPTION);
 		
@@ -392,11 +407,15 @@ public class MenuPrincipal extends JFrame {
 	}
 
 	private void agregarContacto() {
-		AgregarContacto agregar = new AgregarContacto(this);
+			AgregarContacto agregar = new AgregarContacto(this);
 	}
 	
 	private void modificarBorrarContacto() {
-		 BorrarModificar borrarmodificar = new BorrarModificar(this);
+		if (file != null){
+			BorrarModificar borrarmodificar = new BorrarModificar(this);
+		}else{
+			mostrarPopupAgendaNoCargada();
+		}
 	}
 	
 	private void mostrarAyuda(){
