@@ -7,6 +7,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -80,14 +81,20 @@ public class BuscarContacto extends JDialog{
 		JButton botonBuscar = new JButton("Buscar");
 		botonBuscar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (radioNombre.isSelected()){
-					resultado = agenda.buscarPorNombre(busqueda.getText().toString());
-					resulNombre.setText(resultado.getNombre());
-					resulTlfn.setText(resultado.getTelefono());
-				}else{
-					resultado = agenda.buscarPorTelefono(busqueda.getText().toString());
-					resulNombre.setText(resultado.getNombre());
-					resulTlfn.setText(resultado.getTelefono());}
+					if (radioNombre.isSelected()){
+						resultado = agenda.buscarPorNombre(busqueda.getText().toString());
+						if (resultado!=null){
+							resulNombre.setText(resultado.getNombre());
+							resulTlfn.setText(resultado.getTelefono());
+						}
+					}
+					else {
+						resultado = agenda.buscarPorTelefono(busqueda.getText().toString());
+						if (resultado!=null){
+							resulNombre.setText(resultado.getNombre());
+							resulTlfn.setText(resultado.getTelefono());
+						}
+					}
 			}
 		});
 		botonBuscar.setBounds(298, 45, 89, 23);

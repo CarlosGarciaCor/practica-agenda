@@ -31,16 +31,16 @@ public class AgregarContacto extends JDialog{
 	
 	/**
 	 * Constructor del JDialog AgregarContacto. Como su nombre indica permite agregar un contacto a la agenda previamente cargada.
-	 * @param padre Este par√°metro es el JFrame.
+	 * @param padre Este par·metro es el JFrame.
 	 */
 	public AgregarContacto(JFrame padre){
 		super(padre);
 		agenda=((MenuPrincipal) padre).getAgenda();
 		/* 
-		 * Cinco m√©todos b√°sicos que sirven para colocar el t√≠tulo, el icono, 
-		 * la operaci√≥n de cierre, el tama√±o y el layout.
+		 * Cinco mÈtodos b·sicos que sirven para colocar el tÌtulo, el icono, 
+		 * la operaciÛn de cierre, el tamaÒo y el layout.
 		 */
-		setTitle("A√±adir contacto");
+		setTitle("AÒadir contacto");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MenuPrincipal.class.getResource("/com/islasfilipinas/cj/interfaz/iconos/icono_agenda.png")));
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		setBounds(padre.getX()+50, padre.getY()+50, 320, 289);
@@ -48,7 +48,7 @@ public class AgregarContacto extends JDialog{
 		getContentPane().setLayout(null);
 		
 		/*
-		 * Etiqueta de texto. Indica donde deber√° escribir el nombre el usuario.
+		 * Etiqueta de texto. Indica donde deber· escribir el nombre el usuario.
 		 * El JTextField que le sigue es el campo de texto donde el usuario puede escribir.
 		 */
 		JLabel labelNombre = new JLabel("Nombre:");
@@ -79,7 +79,7 @@ public class AgregarContacto extends JDialog{
 		getContentPane().add(textoNombre);
 		
 		/*
-		 * Etiqueta de texto. Indica donde deber√° escribir el tel√©fono el usuario.
+		 * Etiqueta de texto. Indica donde deber· escribir el telÈfono el usuario.
 		 * El JTextField que le sigue es el campo de texto donde el usuario puede escribir.
 		 */
 		JLabel labelTelfono = new JLabel("Tel\u00E9fono:");
@@ -109,7 +109,7 @@ public class AgregarContacto extends JDialog{
 		getContentPane().add(textoTlfn);
 		
 		/*
-		 * Estas dos etiquetas son dos im√°genes que acompa√±an a las etiquetas de texto.
+		 * Estas dos etiquetas son dos im·genes que acompaÒan a las etiquetas de texto.
 		 */
 		JLabel label = new JLabel("");
 		label.setIcon(new ImageIcon(AgregarContacto.class.getResource("/com/islasfilipinas/cj/interfaz/iconos/aniadircont.png")));
@@ -122,8 +122,8 @@ public class AgregarContacto extends JDialog{
 		getContentPane().add(lblNewLabel);
 		
 		/*
-		 * Los botones inferiores para bien a√±adir el contacto o bien volver al men√∫ anterior.
-		 * Se a√±aden junto a ellos los correspondientes listener y eventos.
+		 * Los botones inferiores para bien aÒadir el contacto o bien volver al men˙ anterior.
+		 * Se aÒaden junto a ellos los correspondientes listener y eventos.
 		 */
 		JButton botonAniadir = new JButton("A\u00F1adir");
 		botonAniadir.setBounds(47, 203, 89, 23);
@@ -178,15 +178,15 @@ public class AgregarContacto extends JDialog{
 	
 	private void mostrarPopupYaExiste() {
 		JOptionPane.showMessageDialog(this,
-			    "Ya existe un contacto con este nombre o n√∫mero de tel√©fono.\n"
-			    + "Int√©ntelo de nuevo por favor.",
+			    "Ya existe un contacto con este nombre o n˙mero de telÈfono.\n"
+			    + "IntÈntelo de nuevo por favor.",
 			    "Advertencia",
 			    JOptionPane.WARNING_MESSAGE);
 	}
 	
 	private void mostrarPopupAniadido() {
 		JOptionPane.showMessageDialog(this,
-			    "El contacto " + textoNombre.getText() + " ha sido a√±adido.",
+			    "El contacto " + textoNombre.getText() + " ha sido aÒadido.",
 			    "Completado",
 			    JOptionPane.INFORMATION_MESSAGE,
 			    new ImageIcon(AgregarContacto.class.getResource("/com/islasfilipinas/cj/interfaz/iconos/aniadircont.png")));
@@ -194,8 +194,8 @@ public class AgregarContacto extends JDialog{
 	
 	private int mostrarPopupContactoRaro() {
 		return JOptionPane.showConfirmDialog(this, 
-				"El contacto que intenta a√±adir es algo inusual, "
-				+ "\n¬øest√° seguro de que quiere a√±adirlo?", "Contacto inusual", 
+				"El contacto que intenta aÒadir es algo inusual, "
+				+ "\nøest· seguro de que quiere aÒadirlo?", "Contacto inusual", 
 				JOptionPane.YES_NO_OPTION);
 	}
 	
