@@ -151,7 +151,7 @@ public class ModificarContacto extends JDialog{
 	
 	private void mostrarPopupYaExiste() {
 		JOptionPane.showMessageDialog(this,
-			    "Está escribiendo los datos de un contacto ya existente.\n Inténtelo de nuevo por favor.",
+			    "Está escribiendo el número o nombre de un contacto ya existente.\n Inténtelo de nuevo por favor.",
 			    "Advertencia",
 			    JOptionPane.WARNING_MESSAGE);
 	}

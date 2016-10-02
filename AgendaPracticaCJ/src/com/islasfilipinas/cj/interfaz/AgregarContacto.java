@@ -178,7 +178,8 @@ public class AgregarContacto extends JDialog{
 	
 	private void mostrarPopupYaExiste() {
 		JOptionPane.showMessageDialog(this,
-			    "El contacto que intenta añadir ya existe.",
+			    "Ya existe un contacto con este nombre o número de teléfono.\n"
+			    + "Inténtelo de nuevo por favor.",
 			    "Advertencia",
 			    JOptionPane.WARNING_MESSAGE);
 	}

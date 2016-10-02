@@ -101,7 +101,7 @@ public class MenuPrincipal extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				cargarAgenda(e);
+				cargarAgenda();
 			}
 		});
 		menuAgenda.add(opcionCargarAgenda);
@@ -321,11 +321,8 @@ public class MenuPrincipal extends JFrame {
 	}
 	
 	private void mostrarPopupAgendaNoCargada() {
-		// TODO Auto-generated method stub
 		JOptionPane.showMessageDialog(this, 
-				"La agenda no ha sido cargada."
-				+ "\nUtilice la opción nueva agenda del menú para crear una nueva agenda."
-				+ "\nO la opción cargar para utilizar una existente.", "Información",
+				"No existe ninguna agenda cargada.", "Información",
 				JOptionPane.INFORMATION_MESSAGE);
 	}
 
@@ -358,10 +355,10 @@ public class MenuPrincipal extends JFrame {
 	}
 
 	// CARGAR AGENDA DESDE EL FICHERO - FILECHOOSER
-	private void cargarAgenda(ActionEvent e) {
+	private void cargarAgenda() {
 		
 		JFileChooser jfc=new JFileChooser();
-		FileNameExtensionFilter agFiltro = new FileNameExtensionFilter("Ficheros agenda (*.ag)", ".ag");
+		FileNameExtensionFilter agFiltro = new FileNameExtensionFilter("Ficheros agenda (*.ag)", "ag");
 		jfc.addChoosableFileFilter(agFiltro);
         jfc.setFileFilter(agFiltro);
 		
