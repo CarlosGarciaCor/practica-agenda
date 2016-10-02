@@ -1,6 +1,5 @@
 package com.islasfilipinas.cj.interfaz;
 
-
 import java.awt.Desktop;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
@@ -20,6 +19,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class MenuPrincipal extends JFrame {
 	
@@ -50,7 +51,7 @@ public class MenuPrincipal extends JFrame {
 		setTitle("Agenda de contactos");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MenuPrincipal.class.getResource("/com/islasfilipinas/cj/interfaz/iconos/icono_agenda.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(400, 250, 456, 270);
+		setBounds(400, 250, 600, 500);
 		setLayout(new FlowLayout());
 		iniciarComponentes();
 		agenda = new Agenda();
@@ -81,6 +82,18 @@ public class MenuPrincipal extends JFrame {
 		 * Los tres constructores a continuación añaden opciones al menú de agenda, además se programan 
 		 * sus listeners y actionEvents para hacer diferentes acciones al hacer click en las acciones.
 		 */
+		
+		JMenuItem opcionNuevaAgenda = new JMenuItem("Nueva agenda...");
+		opcionNuevaAgenda.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				crearAgenda();
+			}
+			
+		});
+		menuAgenda.add(opcionNuevaAgenda);
+	
 		JMenuItem opcionCargarAgenda = new JMenuItem("Cargar agenda");
 		opcionCargarAgenda.addActionListener(new ActionListener() {
 			
@@ -108,7 +121,7 @@ public class MenuPrincipal extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (agenda.getContactos().isEmpty())
-					mostrarPopupNoHayAgendaCargada();
+					mostrarPopupAgendaVacia();
 				else
 					mostrarAgenda();
 			}
@@ -141,7 +154,7 @@ public class MenuPrincipal extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (agenda.getContactos().isEmpty())
-					mostrarPopupNoHayAgendaCargada();
+					mostrarPopupAgendaVacia();
 				else
 					modificarBorrarContacto();
 			}
@@ -154,7 +167,7 @@ public class MenuPrincipal extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (agenda.getContactos().isEmpty())
-					mostrarPopupNoHayAgendaCargada();
+					mostrarPopupAgendaVacia();
 				else
 					buscar();
 			}
@@ -178,7 +191,17 @@ public class MenuPrincipal extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				if (Desktop.isDesktopSupported()){
+					try {
+						Desktop.getDesktop().browse(new URI("http://en.lmgtfy.com/"));
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (URISyntaxException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
 			}
 		});
 		menuSistema.add(opcionAyuda);
@@ -188,31 +211,95 @@ public class MenuPrincipal extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				try {
-					System.exit(0);
-				} catch (Throwable e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				salir();
 			}
-			
 		});
 		menuSistema.add(opcionSalir);
 	}
 	
+	private void salir() {
+		try {
+			int valorRetorno=mostrarPopupSalir();
+			if (valorRetorno==0){
+				System.exit(0);
+			}
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private int mostrarPopupSalir() {
+		return JOptionPane.showConfirmDialog(this, 
+				"¿Está seguro de que desea salir?"
+				+ "\nLos cambios no guardados se perderán.", "Salir", 
+				JOptionPane.YES_NO_OPTION);
+	}
 	
 	/*
 	 * A partir de aquí están los métodos privados que se utilizan para realizar las diferentes acciones
 	 * de los eventos.
 	 */
+	
+	private void crearAgenda(){
+		if (!agenda.getContactos().isEmpty()){
+			int valorRetorno=mostrarPopupPreguntaCrearAgenda();
+			if (valorRetorno==0){
+				crearArchivo();
+			}
+		}
+		else
+			crearArchivo();
+	}
+	
+	private void crearArchivo(){
+		JFileChooser jfc=new JFileChooser();
+		jfc.setDialogType(JFileChooser.OPEN_DIALOG);
+		jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		jfc.setCurrentDirectory(new File("C:/Users/"+System.getProperty("user.name")+"/Desktop"));
+		
+		if (jfc.showOpenDialog(this)==JFileChooser.APPROVE_OPTION){
+			this.file=jfc.getSelectedFile();
+			if (this.file.exists()){
+				mostrarPopupSobreescribir();
+			}
+			else {
+				try {
+					this.file.createNewFile();
+					agenda.getContactos().clear();
+					agenda.guardar(file);
+				} catch (IOException e) {
+					mostrarPopupIOException();
+				}
+			}
+		}
+		
+	}
+	
+	private void mostrarPopupSobreescribir() {
+		// TODO Auto-generated method stub
+		JOptionPane.showMessageDialog(this, 
+				"Ese archivo ya existe", "Archivo existente", 
+				JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	private int mostrarPopupPreguntaCrearAgenda() {
+		// TODO Auto-generated method stub
+		return JOptionPane.showConfirmDialog(this, 
+				"Si crea una nueva agenda los cambios"
+				+ "\nque no haya guardado se perderán,"
+				+ "\n¿está seguro de que quiere crearla? ", "Crear agenda", 
+				JOptionPane.YES_NO_OPTION);
+	}
+	
 	private void mostrarAgenda(){
 		Mostrar mostrarAgenda = new Mostrar(this);
 	}
 	
-	private void mostrarPopupNoHayAgendaCargada() {
+	private void mostrarPopupAgendaVacia() {
 		// TODO Auto-generated method stub
 		JOptionPane.showMessageDialog(this, 
-				"No hay ninguna agenda cargada.", "Información",
+				"La agenda está vacía", "Información",
 				JOptionPane.INFORMATION_MESSAGE);
 	}
 
@@ -221,7 +308,7 @@ public class MenuPrincipal extends JFrame {
 	 */
 	private void guardarAgenda() {
 		if (agenda.getContactos().isEmpty()){
-			mostrarPopupNoHayAgendaCargada();
+			mostrarPopupAgendaVacia();
 		}
 		else if (this.file!=null){
 			try {
@@ -236,7 +323,8 @@ public class MenuPrincipal extends JFrame {
 			JFileChooser jfc=new JFileChooser();
 			
 			jfc.setDialogType(JFileChooser.SAVE_DIALOG);
-			jfc.setCurrentDirectory(new File("C:/Users"));
+			jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			jfc.setCurrentDirectory(new File("C:/Users/"+System.getProperty("user.name")+"/Desktop"));
 			
 			if (jfc.showOpenDialog(this)==JFileChooser.APPROVE_OPTION){
 				try {
@@ -247,11 +335,7 @@ public class MenuPrincipal extends JFrame {
 					mostrarPopupIOException();
 				}
 			};
-			
 		}
-		
-		
-		
 	}
 	
 	private void mostrarPopupAgendaGuardadaExito() {
@@ -270,17 +354,13 @@ public class MenuPrincipal extends JFrame {
 		
 		//Si esta ruta absoluta no existe, se coloca en el directorio del proyecto
 		//de forma automática
-		File currentFile=new File(".");
+		File currentFile=new File("C:/Users/"+System.getProperty("user.name")+"/Desktop");
 		
 		if (currentFile.exists())
 			jfc.setCurrentDirectory(currentFile);
 		
 		if (jfc.showOpenDialog(this)==JFileChooser.APPROVE_OPTION){
 			try {
-				/*FileReader fr=new FileReader(jfc.getSelectedFile());
-				if (fr.read()==-1){
-					mostrarPopupFicheroVacio();
-				}*/
 				this.file=jfc.getSelectedFile();
 				agenda.cargar(jfc.getSelectedFile());
 				mostrarPopupAgendaCargada();
@@ -306,7 +386,7 @@ public class MenuPrincipal extends JFrame {
 
 	private void mostrarPopupIOException() {
 		JOptionPane.showMessageDialog(this, 
-				"Ha ocurrido una excepción inesperada, "
+				"Ha ocurrido un error inesperado, "
 				+ "\npor favor vuelva a intentarlo.", "Error",
 				JOptionPane.ERROR_MESSAGE);
 	}
@@ -324,7 +404,6 @@ public class MenuPrincipal extends JFrame {
 	}
 	
 	private void buscar(){
-		
+		BuscarContacto buscar = new BuscarContacto(this);
 	}
-
 }

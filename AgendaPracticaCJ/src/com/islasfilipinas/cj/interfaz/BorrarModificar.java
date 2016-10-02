@@ -33,6 +33,7 @@ public class BorrarModificar extends JDialog{
 	public BorrarModificar(JFrame padre){
 		super(padre);
 		agenda = ((MenuPrincipal) padre).getAgenda();
+		setTitle("Editar contacto");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Mostrar.class.getResource("/com/islasfilipinas/cj/interfaz/iconos/icono_agenda.png")));
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		setBounds(padre.getX()+50, padre.getY()+50, 450, 300);
