@@ -204,7 +204,7 @@ public class MenuPrincipal extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if (Desktop.isDesktopSupported()){
 					try {
-						Desktop.getDesktop().browse(new URI("http://en.lmgtfy.com/"));
+						Desktop.getDesktop().browse(new URI("http://bfy.tw/7zUY"));
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
