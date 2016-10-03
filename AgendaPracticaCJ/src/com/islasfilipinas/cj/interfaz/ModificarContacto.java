@@ -103,16 +103,20 @@ public class ModificarContacto extends JDialog{
 				Contacto viejo = new Contacto (nombreVie, tlfnVie);
 				
 				try {
-					Contacto nuevo = new Contacto (textoNombre.getText(), textoTlfn.getText());
+					
 					if (textoNombre.getText().matches("[a-zA-Z]+")
 							&& textoTlfn.getText().matches("[0-9]+")){
-						agenda.modificar(viejo, nuevo);;
+						//agenda.modificar(viejo, nuevo);;
+						agenda.borrar(viejo);
+						agenda.annadir(new Contacto(textoNombre.getText(), textoTlfn.getText()));
 						mostrarPopupModificado();
 						dispose();
 					}
 					else {
 						if (mostrarPopupContactoRaro()==0){
-							agenda.modificar(viejo, nuevo);
+							//agenda.modificar(viejo, nuevo);
+							agenda.borrar(viejo);
+							agenda.annadir(new Contacto(textoNombre.getText(), textoTlfn.getText()));
 							mostrarPopupModificado();
 							dispose();
 						}

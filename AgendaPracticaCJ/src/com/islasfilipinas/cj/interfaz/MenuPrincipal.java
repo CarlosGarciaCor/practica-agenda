@@ -22,6 +22,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import javax.swing.JLabel;
+import javax.swing.ImageIcon;
+import java.awt.Font;
 
 
 public class MenuPrincipal extends JFrame {
@@ -53,8 +56,28 @@ public class MenuPrincipal extends JFrame {
 		setTitle("Agenda de contactos");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MenuPrincipal.class.getResource("/com/islasfilipinas/cj/interfaz/iconos/icono_agenda.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(400, 250, 600, 500);
-		setLayout(new FlowLayout());
+		setBounds(400, 250, 600, 400);
+		getContentPane().setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setIcon(new ImageIcon(MenuPrincipal.class.getResource("/com/islasfilipinas/cj/interfaz/iconos/rsz_3menuppal.png")));
+		lblNewLabel.setBounds(65, 44, 202, 225);
+		getContentPane().add(lblNewLabel);
+		
+		JLabel lblGestorDeAgendas = new JLabel("AGENDA DE CONTACTOS");
+		lblGestorDeAgendas.setFont(new Font("Lucida Handwriting", Font.BOLD, 16));
+		lblGestorDeAgendas.setBounds(277, 104, 255, 32);
+		getContentPane().add(lblGestorDeAgendas);
+		
+		JLabel lblDesarrolladoPorCarlos = new JLabel("Desarrollado por Carlos Garc\u00EDa y Javier S\u00E1nchez");
+		lblDesarrolladoPorCarlos.setFont(new Font("Cambria", Font.PLAIN, 12));
+		lblDesarrolladoPorCarlos.setBounds(277, 136, 255, 25);
+		getContentPane().add(lblDesarrolladoPorCarlos);
+		
+		JLabel lblPrcticaInicialP = new JLabel("Pr\u00E1ctica inicial Java");
+		lblPrcticaInicialP.setFont(new Font("Cambria", Font.PLAIN, 12));
+		lblPrcticaInicialP.setBounds(277, 161, 231, 14);
+		getContentPane().add(lblPrcticaInicialP);
 		iniciarComponentes();
 		agenda = new Agenda();
 	}
@@ -296,7 +319,7 @@ public class MenuPrincipal extends JFrame {
 	private void mostrarPopupSobreescribir() {
 		// TODO Auto-generated method stub
 		JOptionPane.showMessageDialog(this, 
-				"Ese archivo ya existe", "Archivo existente", 
+				"Ese archivo ya existe.", "Archivo existente", 
 				JOptionPane.INFORMATION_MESSAGE);
 	}
 
@@ -316,7 +339,7 @@ public class MenuPrincipal extends JFrame {
 	private void mostrarPopupAgendaVacia() {
 		// TODO Auto-generated method stub
 		JOptionPane.showMessageDialog(this, 
-				"La agenda está vacía", "Información",
+				"La agenda está vacía.", "Información",
 				JOptionPane.INFORMATION_MESSAGE);
 	}
 	
@@ -350,7 +373,7 @@ public class MenuPrincipal extends JFrame {
 	private void mostrarPopupAgendaGuardadaExito() {
 		// TODO Auto-generated method stub
 		JOptionPane.showMessageDialog(this, 
-				"Agenda guardada con éxito", "Guardar",
+				"Agenda guardada con éxito.", "Guardar",
 				JOptionPane.INFORMATION_MESSAGE);
 	}
 

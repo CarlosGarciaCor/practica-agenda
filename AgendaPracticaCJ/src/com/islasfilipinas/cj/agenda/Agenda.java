@@ -114,33 +114,6 @@ public class Agenda implements Serializable{
 	}
 	
 	/**
-	 * Método empleado para modificar un contacto. Internamente borra el contacto y vuelve a crear uno con los datos ya modificados.
-	 * @param contacto Contacto con los datos antiguos.
-	 * @param contactoMod Contacto con los datos nuevos.
-	 * @throws ContactoRepetidoException Si la modificación tiene datos de contactos ya existentes.
-	 */
-	public void modificar(Contacto contacto, Contacto contactoMod) throws ContactoRepetidoException{
-		//Si el contacto a modificar existe y la modificación realizada no:
-		if (this.containsContacto(contacto) && !this.containsContacto(contactoMod)){
-			// aux es una variable utilizada como auxiliar para compararla con el resto de contactos, encontrando así al contacto que queremos modificar dentro del ArrayList.
-			Contacto aux=null;
-			for (Contacto item: this.contactos){
-				if (contacto.getNombre()==item.getNombre()){
-					aux=item;
-				}
-			}
-			if (aux!=null){
-				this.contactos.remove(aux);
-				this.contactos.add(contactoMod);
-			}
-		}
-		else if(this.containsContacto(contactoMod))
-			throw new ContactoRepetidoException("Está intentando modificar un contacto por otro que ya existe.");
-		else
-			throw new ContactoRepetidoException("El contacto que intenta modificar no existe");
-	}
-	
-	/**
 	 * Método buscar por nombre. Recorre la agenda comparando los nombres de los Contactos.
 	 * @param nombre El nombre a buscar.
 	 * @return El contacto si lo encuentre. Si no encuentra nada devuelve null.
